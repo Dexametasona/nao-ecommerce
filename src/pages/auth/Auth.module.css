@@ -1,0 +1,7 @@
+.containerBox{
+    display: grid;
+    place-items: center;
+    width: 100vw;
+    min-height: 100vh;
+    @apply  overflow-x-hidden bg-neutral-100 px-2;
+}
