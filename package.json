@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@nivo/core": "^0.87.0",
+    "@nivo/line": "^0.87.0",
     "@types/react-router-dom": "^5.3.3",
     "daisyui": "^4.12.2",
     "formik": "^2.4.6",
