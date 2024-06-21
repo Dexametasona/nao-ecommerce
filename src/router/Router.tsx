@@ -4,7 +4,11 @@ import Login from "../pages/auth/Login";
 import Regist from "../pages/auth/Regist";
 import App from "../pages/app/App";
 import Dashboard from "../pages/app/Dashboard";
-import Products from "../pages/app/Products";
+import Productos from "../pages/app/Productos";
+import Config from "../pages/app/Config";
+import Envios from "../pages/app/Envios";
+import Pagos from "../pages/app/Pagos";
+import Pedidos from "../pages/app/Pedidos";
 
 export const ROUTES = createBrowserRouter([
   {
@@ -21,7 +25,11 @@ export const ROUTES = createBrowserRouter([
     element:<App/>,
     children:[
       {path:"dashboard", element:<Dashboard/>},
-      {path:"products", element:<Products/>},
+      {path:"config", element:<Config/>},
+      {path:"envios", element:<Envios/>},
+      {path:"pagos", element:<Pagos/>},
+      {path:"pedidos", element:<Pedidos/>},
+      {path:"products", element:<Productos/>},
       {path:"", element:<Navigate to={"dashboard"}/>, index:true},
     ]
   },

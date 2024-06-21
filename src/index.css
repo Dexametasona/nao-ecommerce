@@ -2,3 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* leaflet */
+.drawer-side{
+    z-index: 9999;
+}
