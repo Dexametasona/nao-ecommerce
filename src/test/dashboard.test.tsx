@@ -4,7 +4,6 @@ import Dashboard from "../pages/app/Dashboard";
 import { Provider } from "react-redux";
 import { authStore } from "../contexts/authStore";
 import { vi } from 'vitest';
-import { ProductService } from "../services/productService";
 
 vi.mock("../services/productService.ts", () => ({
   ProductService:{
