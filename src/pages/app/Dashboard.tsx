@@ -149,13 +149,14 @@ export default function Dashboard() {
       <h2 className="text-center text-2xl text-black font-bold">Bienvenido {currentUser? currentUser.username:"Forastero"} </h2>
     </div>
       <div className="gridBox grid grid-cols-12 gap-x-6 max-w-screen-lg mx-auto">
-        <div className="graphic-card pt-2 max-h-96 col-span-12 md:col-span-6">
+        {/* -------------------------------ultimos vendidos------------------------------- */}
+        <div className="graphic-card pt-2 max-h-96 col-span-12 md:col-span-6 bestGraphicContainer">
           <h4 className="text-center text-black text-xl font-semibold">
             Ventas del último mes
           </h4>
           {monthData ? (
             <ResponsiveLine
-              data={monthData!}
+              data={monthData}
               margin={{ top: 25, right: 12, bottom: 125, left: 48 }}
               xScale={{ type: "point" }}
               yScale={{
@@ -190,7 +191,8 @@ export default function Dashboard() {
             />
           ) : null}
         </div>
-        <div className="graphic-card pt-2 max-h-96 col-span-12 md:col-span-6">
+        {/* ---------------------------------ventas por campaña------------------------ */}
+        <div className="graphic-card pt-2 max-h-96 col-span-12 md:col-span-6 campaignGraphic">
           <h4 className="text-center text-black text-xl font-semibold">
             Ventas por campaña
           </h4>
@@ -233,7 +235,7 @@ export default function Dashboard() {
           ) : null}
         </div>
         {/* --------------------------------mas vendidos */}
-        <div className="bestseller pt-2 col-span-12 md:col-span-6 mb-10">
+        <div className="bestseller pt-2 col-span-12 md:col-span-6 mb-10 bestsellerGraphic">
           <h4 className="text-center text-black text-xl mb-4 font-semibold">
             Productos mas vendidos
           </h4>
@@ -264,7 +266,7 @@ export default function Dashboard() {
           </div>
         </div>
         {/* --------------------------ultimos productos */}
-        <div className="lastSeller pt-2 col-span-12 md:col-span-6">
+        <div className="lastSeller pt-2 col-span-12 md:col-span-6 lastProductsGraphic">
           <h4 className="text-center text-black text-xl mb-4 font-semibold ">
             Ultimos vendidos
           </h4>
@@ -294,7 +296,7 @@ export default function Dashboard() {
             </table>
           </div>
         </div>
-        <div className="map col-span-12 my-12">
+        <div className="map col-span-12 my-12 mapGraphic">
           <h2 className="text-center text-black text-xl font-medium mb-4">
             Principales países de venta
           </h2>
