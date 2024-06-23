@@ -7,7 +7,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   resolve:{
-    mainFields:["module", "main"]
+    mainFields:["module", "main", "browser"]
   },
   test:{
     environment:"jsdom",
