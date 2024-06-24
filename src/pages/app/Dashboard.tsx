@@ -12,13 +12,14 @@ import { graphicLine } from "../../interfaces/graph";
 import { countryData } from "../../services/countryData";
 import { useAppSelector } from "../../hooks/authHooks";
 import { createCustomIcon } from "../../utils/icons";
+import { UserService } from "../../services/userService";
+import { User } from "../../interfaces/user";
 
 export default function Dashboard() {
   const [bestProduct, setBestProduct] = useState<ProductResponse[]>([]);
   const [lastProduct, setLastProduct] = useState<Product[]>([]);
-  const [monthData, setMonthData] = useState<graphicLine[]>();
+  const [totalUser, setTotalUsers] = useState<graphicLine[]>();
   const [monthCampaign, setMonthCampaign] = useState<graphicLine[]>();
-  const [product, setProduct] = useState<Product[]>([]);
   const [dataByCountry, setDataByCOuntry] = useState<CountryData[]>([]);
   const currentUser = useAppSelector(state=>state.auth.user)
 
@@ -30,7 +31,16 @@ export default function Dashboard() {
     );
   };
 
-  const reducerDate = (start: Date, end: Date, dataProduct: Product[]) => {
+  const reducerDate = (start: Date, end: Date, users: User[]) => {
+    const data = users
+      .filter(
+        ({ createDate }) =>
+          createDate.getTime() >= start.getTime() &&
+          createDate.getTime() <= end.getTime()
+      )
+    return data.length;
+  };
+  const reducerDateForProducts = (start: Date, end: Date, dataProduct: Product[]) => {
     const data = dataProduct
       .filter(
         ({ dateSale }) =>
@@ -40,6 +50,7 @@ export default function Dashboard() {
       .reduce((counter, item) => counter + parseInt(item.price), 0);
     return data;
   };
+
   const reducerCountryAmount = (products: Product[]) => {
     return countryData.map(({country, lat, lng}) => ({
       name:country,
@@ -52,43 +63,44 @@ export default function Dashboard() {
     const fetchData = async () => {
       try {
         const dataBestProduct = await ProductService.getBestProduct();
+        const dataTotalUser = await UserService.getCliente();
         const dataProduct = await ProductService.getAll();
         const dataLastProduct = dataProduct
           .sort((a, b) => b.dateSale.getTime() - a.dateSale.getTime())
           .slice(0, 6);
-        const monthProduct: graphicLine = {
-          id: "abril",
+        const userTotal: graphicLine = {
+          id: "Total de usuarios",
           data: [
             {
-              x: "1d",
+              x: "Jan",
               y: reducerDate(
-                new Date(2024, 3, 1),
-                new Date(2024, 3, 1),
-                dataProduct
+                new Date(2024, 0, 1),
+                new Date(2024, 0, 31),
+                dataTotalUser
               ),
             },
             {
-              x: "10d",
+              x: "Feb",
               y: reducerDate(
-                new Date(2024, 3, 1),
-                new Date(2024, 3, 10),
-                dataProduct
+                new Date(2024, 0, 1),
+                new Date(2024, 1, 29),
+                dataTotalUser
               ),
             },
             {
-              x: "20d",
+              x: "Mar",
               y: reducerDate(
-                new Date(2024, 3, 1),
-                new Date(2024, 3, 20),
-                dataProduct
+                new Date(2024, 0, 1),
+                new Date(2024, 2, 31),
+                dataTotalUser
               ),
             },
             {
-              x: "30d",
+              x: "Apr",
               y: reducerDate(
-                new Date(2024, 3, 1),
+                new Date(2024, 0, 1),
                 new Date(2024, 3, 30),
-                dataProduct
+                dataTotalUser
               ),
             },
           ],
@@ -98,7 +110,7 @@ export default function Dashboard() {
           data: [
             {
               x: "Jan",
-              y: reducerDate(
+              y: reducerDateForProducts(
                 new Date(2024, 0, 1),
                 new Date(2024, 0, 31),
                 dataProduct
@@ -106,7 +118,7 @@ export default function Dashboard() {
             },
             {
               x: "Feb",
-              y: reducerDate(
+              y: reducerDateForProducts(
                 new Date(2024, 1, 1),
                 new Date(2024, 1, 29),
                 dataProduct
@@ -114,7 +126,7 @@ export default function Dashboard() {
             },
             {
               x: "Mar",
-              y: reducerDate(
+              y: reducerDateForProducts(
                 new Date(2024, 2, 1),
                 new Date(2024, 2, 31),
                 dataProduct
@@ -122,7 +134,7 @@ export default function Dashboard() {
             },
             {
               x: "Aphr",
-              y: reducerDate(
+              y: reducerDateForProducts(
                 new Date(2024, 3, 1),
                 new Date(2024, 3, 30),
                 dataProduct
@@ -133,9 +145,7 @@ export default function Dashboard() {
 
         setBestProduct(dataBestProduct);
         setLastProduct(dataLastProduct);
-        setProduct(dataProduct);
-        setProduct(dataProduct);
-        setMonthData([monthProduct]);
+        setTotalUsers([userTotal]);
         setMonthCampaign([campaignProduct]);
         setDataByCOuntry(reducerCountryAmount(dataProduct));
       } catch (error) {
@@ -153,11 +163,11 @@ export default function Dashboard() {
         {/* -------------------------------ultimos vendidos------------------------------- */}
         <div className="graphic-card pt-2 max-h-96 col-span-12 md:col-span-6 bestGraphicContainer">
           <h4 className="text-center text-black text-xl font-semibold">
-            Ventas del último mes
+            Total de usuarios
           </h4>
-          {monthData ? (
+          {totalUser ? (
             <ResponsiveLine
-              data={monthData}
+              data={totalUser}
               margin={{ top: 25, right: 12, bottom: 125, left: 48 }}
               xScale={{ type: "point" }}
               yScale={{
@@ -170,11 +180,7 @@ export default function Dashboard() {
               yFormat=" >-.2f"
               colors={"#0074B7"}
               enableArea={true}
-              areaBaselineValue={reducerDate(
-                new Date(2024, 3, 1),
-                new Date(2024, 3, 1),
-                product
-              )}
+              areaBaselineValue={totalUser[0].data.reduce((counter,item)=>item.y <counter?item.y:counter,999)}
               curve="linear"
               axisTop={null}
               axisRight={null}
@@ -318,7 +324,7 @@ export default function Dashboard() {
               position={[item.location.lat, item.location.lng]}
               
               >
-                <Popup>Origen:{item.name}, Total:{item.total}</Popup>
+                <Popup>Origen:{item.name}, Total: ${item.total}</Popup>
               </Marker>
             ))}
           </MapContainer>

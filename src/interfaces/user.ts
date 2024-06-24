@@ -1,9 +1,11 @@
 export interface User{
   username:string ,
   email:string ,
-  password:string 
+  password:string,
+  createDate:Date
 }
-export interface UserRequest extends Omit< User , "username">{}
+export interface UserDtoLogin extends Omit< User , "username" | "createDate">{}
+export interface UserDtoRegist extends Omit< User , "createDate">{}
 
 export interface userState{
   user:User | null

@@ -4,6 +4,7 @@ import { object, string } from "yup";
 import { UserService } from "../../services/userService";
 import { useAppDispatch } from "../../hooks/authHooks";
 import { login } from "../../contexts/authSlice";
+import { User } from "../../interfaces/user";
 
 export default function Regist() {
   const passwordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}$/;
@@ -34,8 +35,8 @@ export default function Regist() {
       try {
         const response = await UserService.register(values);
         if (response.status >= 200 && response.status < 300) {
-          console.log("Nuevo usuario registrado.");
-          dispatch(login(values));
+          console.log("Nuevo usuario registrado.", response.data);
+          dispatch(login(response.data as User));
           navigate("/app");
           return;
         }
