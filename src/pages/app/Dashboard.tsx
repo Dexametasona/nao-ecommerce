@@ -11,6 +11,7 @@ import {
 import { graphicLine } from "../../interfaces/graph";
 import { countryData } from "../../services/countryData";
 import { useAppSelector } from "../../hooks/authHooks";
+import { createCustomIcon } from "../../utils/icons";
 
 export default function Dashboard() {
   const [bestProduct, setBestProduct] = useState<ProductResponse[]>([]);
@@ -44,7 +45,7 @@ export default function Dashboard() {
       name:country,
       location:{lat,lng},
       total:getTotalByCountry(country, products)
-    }));
+    })).sort((a,b)=>a.total-b.total);
   };
 
   useEffect(() => {
@@ -313,6 +314,7 @@ export default function Dashboard() {
             {dataByCountry.map((item, i) => (
               <Marker 
               key={i} 
+              icon={createCustomIcon(i)}
               position={[item.location.lat, item.location.lng]}
               
               >
